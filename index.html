@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Okul Kütüphane Sistemi</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    <div class="container">
+        <header>
+            <h1>Okul Kütüphane Sistemi</h1>
+            <nav>
+                <button onclick="showSection('lending')">Ödünç İşlemleri</button>
+                <button onclick="showSection('books')">Kitaplar</button>
+                <button onclick="showSection('students')">Öğrenciler</button>
+                <button onclick="showSection('backup')">Yedekleme</button>
+                <button onclick="showSection('reports')">Raporlar</button>
+            </nav>
+        </header>
+
+        <main>
+            <section id="lending" class="section">
+                <div class="lending-container">
+                    <div class="lending-form">
+                        <h3>Yeni Ödünç Verme</h3>
+                        <div class="search-container">
+                            <input type="text" id="lendingStudent" placeholder="Öğrenci Ara..." oninput="searchStudents(this.value)">
+                            <div id="studentSuggestions" class="suggestions"></div>
+                        </div>
+                        <input type="hidden" id="selectedStudentId">
+                        
+                        <div class="search-container">
+                            <input type="text" id="lendingBook" placeholder="Kitap Ara..." oninput="searchBooks(this.value)">
+                            <div id="bookSuggestions" class="suggestions"></div>
+                        </div>
+                        <input type="hidden" id="selectedBookIsbn">
+                        
+                        <button onclick="lendBook()" class="action-btn">Ödünç Ver</button>
+                    </div>
+                    <div class="lendings-list-container">
+                        <h3>Ödünç İşlemleri</h3>
+                        <div class="search-container">
+                            <input type="text" id="searchLendings" placeholder="Ödünç kayıtlarında ara..." oninput="updateLendingsList()">
+                        </div>
+                        <div id="lendingsList" class="list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="books" class="section hidden">
+                <h2>Kitap Yönetimi</h2>
+                <div class="form-group">
+                    <!-- Barkod Okuma Alanı -->
+                    <input type="text" id="barcodeInput" placeholder="Barkod Okutun..." oninput="searchBook()">
+                </div>
+                <form id="bookForm">
+                    <input type="text" id="bookTitle" placeholder="Kitap Adı" required>
+                    <input type="text" id="bookAuthor" placeholder="Yazar" required>
+                    <input type="text" id="bookISBN" placeholder="ISBN" required>
+                    <button type="submit">Kitap Ekle</button>
+                </form>
+                <h3>Kitap Listesi</h3>
+                <div id="booksList" class="list"></div>
+            </section>
+
+            <section id="students" class="section hidden">
+                <h2>Öğrenci Yönetimi</h2>
+                <div class="form-group">
+                    <input type="file" id="studentImport" accept=".json">
+                    <button onclick="importStudents()">Öğrenci Listesi İçe Aktar</button>
+                </div>
+                <form id="studentForm">
+                    <input type="text" id="studentNumber" placeholder="Öğrenci No" required>
+                    <input type="text" id="studentName" placeholder="Ad Soyad" required>
+                    <input type="text" id="studentClass" placeholder="Sınıf" required>
+                    <button type="submit">Öğrenci Ekle</button>
+                </form>
+                <h3>Öğrenci Listesi</h3>
+                <div id="studentsList" class="list"></div>
+            </section>
+
+            <section id="backup" class="section hidden">
+                <h2>Yedekleme İşlemleri</h2>
+                <div class="backup-container">
+                    <button onclick="createBackup()">Yedek Oluştur</button>
+                    <input type="file" id="restoreFile" accept=".json">
+                    <button onclick="restoreBackup()">Yedekten Geri Yükle</button>
+                </div>
+            </section>
+
+            <section id="reports" class="section hidden">
+                <h2>Raporlar</h2>
+                <div class="form-group">
+                    <button onclick="exportStudentsToExcel()">Öğrenci Listesi Excel</button>
+                    <button onclick="exportBooksToExcel()">Kitap Listesi Excel</button>
+                    <button onclick="exportBorrowedBooksToExcel()">Ödünç Kitaplar Excel</button>
+                    <button onclick="exportReturnedBooksToExcel()">İade Kitaplar Excel</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/db.js"></script>
+    <script src="js/3d.js"></script>
+    <script src="js/books.js"></script>
+    <script src="js/students.js"></script>
+    <script src="js/lending.js"></script>
+    <script src="js/backup.js"></script>
+    <script src="js/reports.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
